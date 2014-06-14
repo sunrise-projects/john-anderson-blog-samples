@@ -17,26 +17,39 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String name = authentication.getName();
-        String password = authentication.getCredentials().toString();
-        if (name.equals("user") && password.equals("user")) {
-            List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-            authorities.add(new GrantedAuthorityImpl("ROLE_USER"));            
-            UserDetails userDetails = new User(name, password, true, true, true, true, authorities);            
-            Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, password, authorities);
-            return auth;
-        } else if (name.equals("admin") && password.equals("admin")) {
-            List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-            authorities.add(new GrantedAuthorityImpl("ROLE_USER"));
-            authorities.add(new GrantedAuthorityImpl("ROLE_ADMIN"));
-            UserDetails userDetails = new User(name, password, true, true, true, true, authorities);            
-            Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, password, authorities);
-            return auth;
-        } else {
-        	UserDetails userDetails = new User(name, password, false, false, false, false, new ArrayList<GrantedAuthority>());
-        	Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, password, new ArrayList<GrantedAuthority>());
-        	auth.setAuthenticated(false);        	
-        	return auth;
-        }
+        String password = authentication.getCredentials().toString();        
+        if(name.equals("user")) {
+        	String initsecret = "1234567890123456";
+        	String pin = "1234";
+        	String otp = password;
+        	boolean pass = checkOTP( otp, initsecret, pin, 0);
+        	if(pass) {
+                List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+                authorities.add(new GrantedAuthorityImpl("ROLE_USER"));            
+                UserDetails userDetails = new User(name, password, true, true, true, true, authorities);            
+                Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, password, authorities);
+                return auth;        		
+        	}        	
+        } else if(name.equals("admin")) {
+        	String initsecret = "1234567890123456";
+        	String pin = "1234";
+        	String otp = password;
+        	boolean pass = checkOTP( otp, initsecret, pin, 0);
+        	if(pass) {
+                List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+                authorities.add(new GrantedAuthorityImpl("ROLE_USER"));
+                authorities.add(new GrantedAuthorityImpl("ROLE_ADMIN"));   
+                UserDetails userDetails = new User(name, password, true, true, true, true, authorities);            
+                Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, password, authorities);
+                return auth;        		
+        	}         	        
+        } 
+        
+    	UserDetails userDetails = new User(name, password, false, false, false, false, new ArrayList<GrantedAuthority>());
+    	Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, password, new ArrayList<GrantedAuthority>());
+    	auth.setAuthenticated(false);        	
+    	return auth;
+    	
     }
  
     private boolean checkOTP(String otp, String initsecret, String pin, long offset) {

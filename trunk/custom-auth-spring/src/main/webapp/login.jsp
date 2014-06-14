@@ -52,7 +52,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td>Password</td>
+				<td>Token</td>
 				<td><input id="passwordField" type="password" name="j_password" />
 				</td>
 			</tr>
