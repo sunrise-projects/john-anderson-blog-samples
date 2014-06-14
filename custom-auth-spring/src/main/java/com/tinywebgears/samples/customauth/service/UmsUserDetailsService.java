@@ -3,13 +3,10 @@ package com.tinywebgears.samples.customauth.service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,8 +28,6 @@ public class UmsUserDetailsService implements UserDetailsService
 
     public UmsUserDetailsService()
     {
-        createSSOSession("user");
-        createSSOSession("admin");
     }
 
     public String createSSOSession(String username)
@@ -63,41 +58,12 @@ public class UmsUserDetailsService implements UserDetailsService
 
     public UserDetails loadUserByCookie(String cookie) throws UsernameNotFoundException, DataAccessException
     {
-        logger.debug("Loading user by cookie: " + cookie);
-        Date sessionValidUntil = sessionValidity.get(cookie);
-        Date now = new Date();
-        logger.debug("Session valid until: " + sessionValidUntil + " now: " + now);
-        if (sessionValidUntil == null || now.after(sessionValidUntil))
-        {
-            logger.debug("Session no longer valid.");
-            cookie = null;
-        }
-        return loadUserByUsername(cookiesToUsers.get(cookie));
+    	return null;
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException
     {
-        logger.debug("Loading user by name: " + username);
-        if (username != null && username.equals("user"))
-        {
-            Vector<GrantedAuthority> userAuthorities = new Vector<GrantedAuthority>();
-            userAuthorities.add(new GrantedAuthorityImpl(ROLE_USER));
-            User user = new User("user", "Et6pb+wgWTVmq3VpLJlJWWgzrck=" /* SHA-1 encoded of "user" */, true, true,
-                    true, true, userAuthorities.toArray(new GrantedAuthority[0]));
-            currentUser.set(user);
-            return user;
-        }
-        if (username != null && username.equals("admin"))
-        {
-            Vector<GrantedAuthority> userAuthorities = new Vector<GrantedAuthority>();
-            userAuthorities.add(new GrantedAuthorityImpl(ROLE_USER));
-            userAuthorities.add(new GrantedAuthorityImpl(ROLE_ADMINISTRATOR));
-            User user = new User("admin", "0DPiKuNIrrVmD8IUCuw1hQxNqZc=" /* SHA-1 encoded of "admin" */, true, true,
-                    true, true, userAuthorities.toArray(new GrantedAuthority[0]));
-            currentUser.set(user);
-            return user;
-        }
-        throw new UsernameNotFoundException("Username " + username + " not found!");
+    	return null;
     }
 
     public User getCurrentUser()
